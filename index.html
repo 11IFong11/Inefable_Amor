@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pink Hacker Terminal</title>
+    <style>
+        body {
+            background-color: #1a0515;
+            color: #ff33cc;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .terminal {
+            background-color: #260820;
+            border: 2px solid #ff33cc;
+            border-radius: 10px;
+            padding: 30px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 0 20px #ff33cc, inset 0 0 10px #ff33cc;
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #ff33cc;
+            margin-bottom: 30px;
+        }
+
+        .input-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .prompt {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid #ff33cc;
+            color: #ff99ff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.2rem;
+            flex-grow: 1;
+            padding: 5px;
+            outline: none;
+            text-shadow: 0 0 5px #ff99ff;
+        }
+
+        input[type="text"]:focus {
+            border-bottom: 2px solid #ff33cc;
+        }
+
+        button {
+            background-color: #ff33cc;
+            color: #1a0515;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-left: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #ff33cc;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: #ff66d9;
+            box-shadow: 0 0 20px #ff66d9;
+        }
+
+        .output-area {
+            min-height: 80px;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #12030f;
+            border: 1px dashed #ff33cc;
+            border-radius: 5px;
+        }
+
+        .success {
+            color: #66ff66;
+            text-shadow: 0 0 10px #66ff66;
+            font-size: 1.5rem;
+            text-align: center;
+            animation: blink 1s infinite alternate;
+        }
+
+        .error {
+            color: #ff3333;
+            text-shadow: 0 0 10px #ff3333;
+        }
+
+        @keyframes blink {
+            from { opacity: 1; }
+            to { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="terminal">
+        <h1>[ Sistema Rosita v1.0 ]</h1>
+        <div class="input-line">
+            <span class="prompt">root@rosita:~#</span>
+            <input type="text" id="codigoInput" placeholder="Ingresa la clave..." autocomplete="off">
+            <button onclick="verificarCodigo()">Hackear</button>
+        </div>
+        <div class="output-area" id="output">
+            Esperando input del usuario...
+        </div>
+    </div>
+
+    <script>
+        // Función para generar un sonido de victoria retro
+        function reproducirSonidoVictoria() {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return; 
+            
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            // Tipo de onda retro
+            osc.type = 'square';
+            
+            // Arpegio feliz (3 notas rápidas)
+            const now = ctx.currentTime;
+            osc.frequency.setValueAtTime(523.25, now);       // Do
+            osc.frequency.setValueAtTime(659.25, now + 0.1); // Mi
+            osc.frequency.setValueAtTime(783.99, now + 0.2); // Sol
+            
+            // Volumen
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+            
+            osc.start(now);
+            osc.stop(now + 0.5);
+        }
+
+        // Función principal del buscador
+        function verificarCodigo() {
+            const inputElement = document.getElementById('codigoInput');
+            const outputElement = document.getElementById('output');
+            
+            // Convertimos a minúsculas y quitamos acentos para que sea más fácil de acertar
+            let codigo = inputElement.value.trim().toLowerCase();
+            
+            // Normalizar el texto (ej. "iván" -> "ivan")
+            codigo = codigo.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+            let respuesta = "";
+
+            // Lógica de los 4 códigos exactos
+            if (codigo === "ivan") {
+                respuesta = "<div class='success'>[ ACCESO CONCEDIDO ]<br><br>VALOR: 4</div>";
+                reproducirSonidoVictoria();
+            } 
+            else if (codigo === "29/09/23") {
+                respuesta = "<div class='success'>[ ACCESO CONCEDIDO ]<br><br>VALOR: 6</div>";
+                reproducirSonidoVictoria();
+            } 
+            else if (codigo === "cha") {
+                respuesta = "<div class='success'>[ ACCESO CONCEDIDO ]<br><br>VALOR: 2</div>";
+                reproducirSonidoVictoria();
+            } 
+            else if (codigo === "morado") {
+                respuesta = "<div class='success'>[ ACCESO CONCEDIDO ]<br><br>VALOR: 3</div>";
+                reproducirSonidoVictoria();
+            } 
+            else {
+                // Mensaje de error para cualquier otra cosa
+                respuesta = "<div class='error'>> ERROR: Código inválido o corrupto.<br>> Acceso denegado. Intento registrado en el sistema.</div>";
+            }
+
+            // Mostrar el resultado
+            outputElement.innerHTML = respuesta;
+            
+            // Limpiar la barra
+            inputElement.value = "";
+            inputElement.focus();
+        }
+
+        // Permitir usar la tecla "Enter" para enviar
+        document.getElementById("codigoInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                verificarCodigo();
+            }
+        });
+    </script>
+</body>
+</html>
